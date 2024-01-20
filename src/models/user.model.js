@@ -53,6 +53,8 @@ const userSchema = new Schema(
   }, { timestamps: true })
 
 
+
+// It Tells db do this thing before saving the password , if password is not modified it will directly run the next() function , if password is changed it will run the bcrypt.hash(this.password, 10)then all the work 
 userSchema.pre("save", async function (next) {
   if (!this.isModified('password')) return next();
 
@@ -60,10 +62,14 @@ userSchema.pre("save", async function (next) {
   next()
 })
 
+
+// it is the custome method incerted in userschema  checkeing the previous password with encripted password 
 userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password)
 }
 
+
+// Another custome method used to generated jwt accesstoken with id, email, username, fullname
 userSchema.methods.generateAccessToken = function () {
   return Jwt.sign(
     {
@@ -79,6 +85,8 @@ userSchema.methods.generateAccessToken = function () {
   )
 }
 
+
+// This custome method is used to generate jwt refresh token
 userSchema.methods.generateRefereshToken = function () {
   return Jwt.sign(
     {
