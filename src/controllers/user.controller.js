@@ -24,12 +24,15 @@ const registerUser = asyncHandler(async (req, res) => {
   //   throw new ApiError("Please provide your Full Name", 400)
   // }
 
+
+  // Validation of all the fields 
+  // trim()is a string method that removes the whitespaces from string and returns new string without whitespaces
   if ([fullName, email, username, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required")
   }
 
-
+  // Check for existed user 
   const existedUser = User.findOne({
     $or: [{ username }, { email }]
   })
@@ -38,6 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email ro username already exists")
   }
 
+  // For uploading avatar and coverimage from cloudinary using localpath and cludinary
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
@@ -52,6 +56,8 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar file is required")
   }
 
+
+  // Saving Data in Database using create method 
   const user = await User.create({
     fullName,
     avatar: avatar.url,
@@ -61,6 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
     username: username.toLowerCase()
   })
 
+  // We dont send password and refreshToken to user in response
   const createdUser = await User.findById(user._id).select(
     "-password -refreshToken"
   )
@@ -72,11 +79,6 @@ const registerUser = asyncHandler(async (req, res) => {
   return res.status(201).json(
     new ApiResponse(200, createdUser, "User Registered Successfully !!")
   )
-
-
-
-
-
 
 })
 
