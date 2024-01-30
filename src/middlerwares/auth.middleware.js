@@ -12,10 +12,12 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       throw new ApiError(401, "Unauthorized Request")
     }
 
-    // We try to find the token that  matches with the one on the database
+
+    // If a token is found, it attempts to verify the token using a secret key 
     const decodedToken = Jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
 
-    // Searches  for a user by its decodedToken id without password and refreshToken
+
+    // It then attempts to find a user in the database based on the user ID extracted from the decoded token.
     const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
 
     if (!user) {
@@ -23,6 +25,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     }
 
     // we add a new object namely user and gives the access of user 
+    // If a user is found, it attaches the user object to the request (req.user), excluding sensitive information like the password and refreshToken.
     req.user = user;
     // Now Execute the next()function  which means move to the next middleware function
     next()

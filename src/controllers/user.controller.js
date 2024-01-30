@@ -169,6 +169,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
 
+  // findByIdAndUpdate is the function  which finds with id and updates document in database
+
   await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -176,9 +178,11 @@ const logoutUser = asyncHandler(async (req, res) => {
         refreshToken: undefined
       }
     },
+    // The { new: true } option ensures that the updated document is returned after the update operation.
     {
       new: true
     }
+    // By default, findOneAndUpdate() returns the document as it was before update was applied. If you set new: true, findOneAndUpdate() will instead give you the object after update was applied.
   )
 
   const options = {
