@@ -102,4 +102,6 @@ userSchema.methods.generateRefereshToken = function () {
 
 
 
+
+
 export const User = mongoose.model("User", userSchema)
