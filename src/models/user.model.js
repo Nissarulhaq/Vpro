@@ -10,7 +10,7 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true,  // it is to enable for searching 
+      index: true, // it is to enable for searching 
     },
     email: {
       type: String,
@@ -18,14 +18,12 @@ const userSchema = new Schema(
       lowerCase: true,
       trim: true,
       required: true,
-
     },
     fullname: {
       type: String,
       require: true,
       trim: true,
       index: true
-
     },
     avatar: {
       type: String,
@@ -33,7 +31,6 @@ const userSchema = new Schema(
     },
     coverImage: {
       type: String,
-
     },
     watchHistory: [
       {
@@ -44,14 +41,12 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, 'Password is required']
-
     },
     refreshToken: {
       type: String
     }
 
   }, { timestamps: true })
-
 
 
 // It Tells db do this thing before saving the password , if password is not modified it will directly run the next() function , if password is changed it will run the bcrypt.hash(this.password, 10)then all the work 
@@ -91,7 +86,6 @@ userSchema.methods.generateRefereshToken = function () {
   return Jwt.sign(
     {
       _id: this._id,
-
     },
     process.env.REFRESH_TOKEN_SECRET,
     {
@@ -99,9 +93,5 @@ userSchema.methods.generateRefereshToken = function () {
     }
   )
 }
-
-
-
-
 
 export const User = mongoose.model("User", userSchema)
